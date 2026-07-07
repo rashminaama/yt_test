@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>YouTube Trending — Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 24px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e5e5; font-size: 14px; }
+    th { background: #fafafa; }
+    a { color: #cc0000; text-decoration: none; }
+    .views { text-align: right; white-space: nowrap; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    button { padding: 10px 18px; background: #cc0000; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+    button:disabled { background: #999; cursor: wait; }
+    .flash { background: #fff3cd; padding: 10px 14px; border-radius: 4px; margin-bottom: 16px; font-size: 14px; }
+    .logout { font-size: 13px; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h2>YouTube Trending — Latest</h2>
+    <div>
+      <form method="post" action="{{ url_for('send_now') }}" style="display:inline" onsubmit="onSend(this)">
+        <button type="submit" id="send-btn">Send Now</button>
+      </form>
+      <a class="logout" href="{{ url_for('logout') }}">Log out</a>
+    </div>
+  </div>
+
+  {% with messages = get_flashed_messages() %}
+    {% for message in messages %}
+      <div class="flash">{{ message }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Channel</th>
+        <th>Category</th>
+        <th class="views">Views</th>
+        <th>Last seen</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for video in videos %}
+      <tr>
+        <td><a href="{{ video.url }}">{{ video.title }}</a></td>
+        <td>{{ video.channel_title }}</td>
+        <td>{{ video.category_name or "—" }}</td>
+        <td class="views">{{ "{:,}".format(video.view_count) if video.view_count is not none else "—" }}</td>
+        <td>{{ video.last_seen_at }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <script>
+    function onSend(form) {
+      const btn = form.querySelector("#send-btn");
+      btn.disabled = true;
+      btn.textContent = "Sending…";
+    }
+  </script>
+</body>
+</html>

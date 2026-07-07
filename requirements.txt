@@ -1,0 +1,10 @@
+google-api-python-client
+psycopg2-binary
+python-dotenv
+Jinja2
+tenacity
+Flask
+gunicorn
+requests
+pytest
+pytest-mock
